@@ -12,28 +12,32 @@ function getComputerChoice() {
 }
 
 function getPlayerChoice() {
-  var choice = parseInt(prompt("0. Rock, 1. Paper or 2. Scissors?"));
-  if (!(choice in [0, 1, 2])) {
+  var choice = parseInt(prompt("1. Rock, 2. Paper or 3. Scissors?"));
+  if (!(choice in [1, 2, 3])) {
     getPlayerChoice();
   } else {
     console.log(`Player chose ${option[choice]}`);
-    return choice;
+    return choice - 1;
   }
 }
 
+function getResult(a, b) {
+  return (3 + a - b) % 3;
+}
+
 function playRound(player, computer) {
-  let result = player - computer;
-  if (result % 3 === 0) {
+  let result = getResult(player, computer);
+  if (result === 0) {
     console.log("%cTie!", "color: yellow");
     computer = getComputerChoice();
     player = getPlayerChoice();
-    playRound(player, computer);
-  } else if (result % 3 === 1 || result % 3 === -2) {
+    return playRound(player, computer);
+  } else if (result === 1 || result === 2) {
     console.log("%cYou Win!", "color: green");
-    return 1;
+    return true;
   } else {
     console.log("%cYou Lost!", "color: red");
-    return 0;
+    return false;
   }
 }
 
@@ -43,7 +47,7 @@ function game() {
     console.log(`%cRound ${i + 1}`, "color: lightblue");
     computer = getComputerChoice();
     player = getPlayerChoice();
-    playerScore += playRound(player, computer);
+    if (playRound(player, computer)) playerScore++;
   }
   console.log(playerScore);
 }
