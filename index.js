@@ -1,55 +1,73 @@
-const option = ["Rock", "Paper", "Scissors"];
-const outcome = ["Win", "Tie", "Lost"];
+const _option = ["Rock", "Paper", "Scissors"];
+let playerScore = 0;
+let computerScore = 0;
 
 function getRandomInt(number) {
   return Math.floor(Math.random() * number);
 }
 
 function getComputerChoice() {
-  var choice = getRandomInt(3);
-  console.log(`Computer chose ${option[choice]}`);
+  const choice = getRandomInt(3);
   return choice;
-}
-
-function getPlayerChoice() {
-  var choice = parseInt(prompt("1. Rock, 2. Paper or 3. Scissors?"));
-  if (!(choice in [1, 2, 3])) {
-    getPlayerChoice();
-  } else {
-    console.log(`Player chose ${option[choice]}`);
-    return choice - 1;
-  }
 }
 
 function getResult(a, b) {
   return (3 + a - b) % 3;
 }
 
-function playRound(player, computer) {
-  let result = getResult(player, computer);
+function playRound(playerChoice) {
+  computer = getComputerChoice();
+  player = playerChoice;
+  result = getResult(player, computer);
+
   if (result === 0) {
-    console.log("%cTie!", "color: yellow");
-    computer = getComputerChoice();
-    player = getPlayerChoice();
-    return playRound(player, computer);
-  } else if (result === 1 || result === 2) {
-    console.log("%cYou Win!", "color: green");
-    return true;
+    div1.textContent =
+      `Player Score: ${playerScore} | Computer Score: ${computerScore}`;
+
+    div.textContent = "Tie!";
+  } else if (result === 1) {
+    div.textContent = `Player Won! ${_option[player]} beats ${
+      _option[computer]
+    }`;
+    playerScore += 1;
+    div1.textContent =
+      `Player Score: ${playerScore} | Computer Score: ${computerScore}`;
   } else {
-    console.log("%cYou Lost!", "color: red");
-    return false;
+    div.textContent = `Player Lost! ${_option[player]} loses to ${
+      _option[computer]
+    }`;
+    computerScore += 1;
+    div1.textContent =
+      `Player Score: ${playerScore} | Computer Score: ${computerScore}`;
   }
 }
 
-function game() {
-  let playerScore = 0;
-  for (let i = 0; i < 5; i++) {
-    console.log(`%cRound ${i + 1}`, "color: lightblue");
-    computer = getComputerChoice();
-    player = getPlayerChoice();
-    if (playRound(player, computer)) playerScore++;
-  }
-  console.log(playerScore);
-}
+const div1 = document.createElement("div");
+div1.textContent =
+  `Player Score: ${playerScore} | Computer Score: ${computerScore}`;
+document.querySelector("body").appendChild(div1);
+const div = document.createElement("div");
+document.querySelector("body").appendChild(div);
 
-game();
+const button_rock = document.createElement("button");
+button_rock.setAttribute("value", 0);
+button_rock.textContent = "Rock";
+const button_paper = document.createElement("button");
+button_paper.textContent = "Paper";
+button_paper.setAttribute("value", 1);
+const button_scissors = document.createElement("button");
+button_scissors.textContent = "Scissors";
+button_scissors.setAttribute("value", 2);
+document.querySelector("body").appendChild(button_rock);
+document.querySelector("body").appendChild(button_paper);
+document.querySelector("body").appendChild(button_scissors);
+
+button_rock.addEventListener("click", () => {
+  playRound(0);
+});
+button_paper.addEventListener("click", () => {
+  playRound(1);
+});
+button_scissors.addEventListener("click", () => {
+  playRound(2);
+});
